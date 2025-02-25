@@ -1,0 +1,47 @@
+package gerenciadorNotasAlunos;
+
+import org.springframework.stereotype.Service;
+import java.util.HashMap;
+import java.util.Map;
+
+
+public class SalaService {
+
+    @Service
+    public class SalaService {
+        private final Map<String, Sala> salas = new HashMap<>();
+
+        public void cadastrarSala(String nome) {
+            salas.put(nome, new Sala(nome));
+        }
+
+        public void cadastrarAluno(String nomeSala, String nomeAluno, String matricula) {
+            Sala sala = salas.get(nomeSala);
+            if (sala != null) {
+                sala.adicionarAluno(new Aluno(nomeAluno, matricula));
+            }
+        }
+
+        public void lancarNota(String nomeSala, String matricula, double nota) {
+            Sala sala = salas.get(nomeSala);
+            if (sala != null) {
+                for (Aluno aluno : sala.getAlunos()) {
+                    if (aluno.getMatricula().equals(matricula)) {
+                        aluno.adicionarNota(nota);
+                    }
+                }
+            }
+        }
+
+        public Map<String, String> listarAlunos(String nomeSala) {
+            Sala sala = salas.get(nomeSala);
+            Map<String, String> resultado = new HashMap<>();
+            if (sala != null) {
+                for (Aluno aluno : sala.getAlunos()) {
+                    resultado.put(aluno.getNome(), aluno.calcularMedia() + " - " + (aluno.isAprovado() ? "Aprovado" : "Reprovado"));
+                }
+            }
+            return resultado;
+        }
+    }
+}
