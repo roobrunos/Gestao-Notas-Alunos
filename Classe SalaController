@@ -1,0 +1,34 @@
+package gerenciadorNotasAlunos;
+
+import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/salas")
+public class SalaController {
+    private final SalaService salaService;
+
+    public SalaController(SalaService salaService) {
+        this.salaService = salaService;
+    }
+
+    @PostMapping
+    public void cadastrarSala(@RequestBody Map<String, String> request) {
+        salaService.cadastrarSala(request.get("nome"));
+    }
+
+    @PostMapping("/{nomeSala}/alunos")
+    public void cadastrarAluno(@PathVariable String nomeSala, @RequestBody Map<String, String> request) {
+        salaService.cadastrarAluno(nomeSala, request.get("nome"), request.get("matricula"));
+    }
+
+    @PostMapping("/{nomeSala}/alunos/{matricula}/notas")
+    public void lancarNota(@PathVariable String nomeSala, @PathVariable String matricula, @RequestParam double nota) {
+        salaService.lancarNota(nomeSala, matricula, nota);
+    }
+
+    @GetMapping("/{nomeSala}/alunos")
+    public Map<String, String> listarAlunos(@PathVariable String nomeSala) {
+        return salaService.listarAlunos(nomeSala);
+    }
+}
